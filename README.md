@@ -1,14 +1,4 @@
-Here is the raw text for your README.md file, updated specifically for the SO-101.
 
-How to use this:
-
-Copy the text inside the box below.
-
-Paste it directly into your GitHub file.
-
-Note: I have kept the internal code blocks (the ones inside the guide) because GitHub needs those to display your commands correctly.
-
-Markdown
 
 # 🤖 LeRobot SO-101: "The Dad Demo" & FLL Guide
 
