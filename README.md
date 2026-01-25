@@ -1,6 +1,6 @@
 
 
-# 🤖 LeRobot SO-101: "The Dad Demo" & FLL Guide
+# 🤖 LeRobot SO-101: Live Demo(ACT model)
 
 ![Status](https://img.shields.io/badge/Status-Operational-green)
 ![Robot](https://img.shields.io/badge/Hardware-SO--101-blue)
@@ -53,17 +53,18 @@ Since we are on Windows, we need to create a Linux environment to run the AI.
 Open **PowerShell (Admin)** and run:
 ```powershell
 wsl --install
+```
 # RESTART YOUR COMPUTER NOW
 Step 2: Install the USB Bridge
 Windows blocks USB devices from Linux. We need usbipd to open the gate.
-```
 PowerShell
 ```powershell
 winget install -e --id dorssel.usbipd-win
+```
 # RESTART YOUR COMPUTER AGAIN
 Step 3: Set up LeRobot (Inside Linux)
 Open your Ubuntu terminal (search "Ubuntu" in Start Menu) and run:
-```
+
 Bash
 # 1. Create a folder for your project
 ```bash
@@ -79,7 +80,7 @@ conda create -n lerobot python=3.10
 conda activate lerobot
 ```
 # 4. Install the software
-```b
+```bash
 cd lerobot
 pip install -e .
 ```
