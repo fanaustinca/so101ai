@@ -1,13 +1,23 @@
+Here is the raw text for your README.md file, updated specifically for the SO-101.
+
+How to use this:
+
+Copy the text inside the box below.
+
+Paste it directly into your GitHub file.
+
+Note: I have kept the internal code blocks (the ones inside the guide) because GitHub needs those to display your commands correctly.
+
 Markdown
 
-# 🤖 LeRobot SO-100: The "Dad Demo" & FLL Guide
+# 🤖 LeRobot SO-101: "The Dad Demo" & FLL Guide
 
 ![Status](https://img.shields.io/badge/Status-Operational-green)
-![Robot](https://img.shields.io/badge/Hardware-SO--100-blue)
+![Robot](https://img.shields.io/badge/Hardware-SO--101-blue)
 ![Platform](https://img.shields.io/badge/OS-Windows%20%2F%20WSL-orange)
 ![AI Model](https://img.shields.io/badge/Model-ACT%20Policy-purple)
 
-Welcome! This repository documents the complete workflow for building, training, and deploying the **SO-100 Robot Arm** using the [Hugging Face LeRobot](https://github.com/huggingface/lerobot) library.
+Welcome! This repository documents the complete workflow for building, training, and deploying the **SO-101 Robot Arm** using the [Hugging Face LeRobot](https://github.com/huggingface/lerobot) library.
 
 This guide is specifically tailored for **Windows users (via WSL2)** and focuses on the "Puppeteer" configuration (Human Leader Arm + Robot Follower Arm).
 
@@ -25,7 +35,7 @@ This guide is specifically tailored for **Windows users (via WSL2)** and focuses
 ## 🛒 1. Hardware Bill of Materials
 
 ### A. The Robot Arms (The Hands)
-* **The Follower (Active):** SO-100 Robot Arm Kit.
+* **The Follower (Active):** SO-101 Robot Arm Kit.
     * *Motors:* 6x Feetech STS3215.
     * *Controller:* ESP32-S3 / Feetech Bus Linker.
 * **The Leader (Passive):** A secondary arm used for teleoperation.
@@ -56,29 +66,33 @@ wsl --install
 # RESTART YOUR COMPUTER NOW
 Step 2: Install the USB Bridge
 Windows blocks USB devices from Linux. We need usbipd to open the gate.
-
+```
 PowerShell
-
+```powershell
 winget install -e --id dorssel.usbipd-win
 # RESTART YOUR COMPUTER AGAIN
 Step 3: Set up LeRobot (Inside Linux)
 Open your Ubuntu terminal (search "Ubuntu" in Start Menu) and run:
-
+```
 Bash
-
 # 1. Create a folder for your project
+```bash
 mkdir ~/lerobot_ws && cd ~/lerobot_ws
-
+```
 # 2. Download the LeRobot code
+```bash
 git clone [https://github.com/huggingface/lerobot.git](https://github.com/huggingface/lerobot.git)
-
+```
 # 3. Create a Python virtual environment (Keeps things clean)
+```bash
 conda create -n lerobot python=3.10
 conda activate lerobot
-
+```
 # 4. Install the software
+```b
 cd lerobot
 pip install -e .
+```
 🔌 3. Connecting the Robot
 ⚠️ YOU MUST DO THIS EVERY TIME YOU PLUG THE ROBOT IN.
 
@@ -89,49 +103,54 @@ Open PowerShell (Admin) on Windows.
 Find your devices:
 
 PowerShell
-
+```powershell
 usbipd list
+```
 (Look for "CP210x" or "Feetech". Note the BUSID, e.g., 2-1)
 
 Attach them to Linux:
 
 PowerShell
-
+```powershell
 usbipd attach --wsl --busid <ROBOT_ID>
 usbipd attach --wsl --busid <LEADER_ID>
+```
 🎬 4. The Workflow
 Phase 1: Teleoperation (The "Handshake")
-Before recording, prove the robot works.
+Before recording, prove the robot works. Note: We use so100 config because the SO-101 is compatible with the SO-100 software stack.
 
 Bash
-
+```bash
 python lerobot/scripts/control_robot.py teleoperate \
   --robot-path so100 \
   --robot-type so100
+```
 Success: When you move the Leader, the Follower moves instantly.
 
 Phase 2: Data Collection (The "Training")
 Record 50 episodes of your task (e.g., "Pick up the red block").
 
 Bash
-
+```bash
 python lerobot/scripts/control_robot.py record \
   --robot-path so100 \
   --robot-type so100 \
   --repo-id <YOUR_GITHUB_USER>/<DATASET_NAME> \
   --num-episodes 50
+```
 Tip: Move smoothly. Pause for 1 second before grabbing the object.
 
 Phase 3: The Demo (The "Magic Trick")
 Run your trained AI policy.
 
 Bash
-
+```bash
 python lerobot/scripts/lerobot_eval.py \
   --policy.path outputs/train/act_so100_real/checkpoints/last/pretrained_model \
   --env.type so100_real \
   --device cpu \
   --num-episodes 50
+```
 🚨 5. The Debug Playbook (Troubleshooting)
 Problem: "Device Not Found" / "No such file or directory"
 Cause: Linux cannot see the USB port.
@@ -176,14 +195,3 @@ Close all other apps (Zoom, Discord, Camera App).
 Unplug and Replug the camera.
 
 Run ls /dev/video* in Ubuntu to see if it lists video0/video2.
-
-Problem: FLL Demo Panic (AI won't start)
-Emergency Plan:
-
-Kill the code (Ctrl + C).
-
-Switch to Teleoperation Mode (Phase 1 code).
-
-Hand the Leader arm to a judge and let them try.
-
-Spin: "We are now demonstrating the 'Data Collection' phase of the pipeline."
