@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
+from IPython.display import Markdown, display
 
 
 def detect_env():
@@ -192,6 +193,28 @@ def setup_lerobot_env():
     setup_huggingface()
     setup_wandb()
     cd_lerobot()
+
+
+def print_shell_md(title: str, command: str, *args: str):
+    """
+    Displays a markdown block with a title and a shell command.
+
+    The command is built from the `command` argument and any additional `args` provided.
+
+    Args:
+        title (str): The title to display above the command.
+        command (str): The base command or first part of the command (e.g., 'python').
+        *args (str): Zero or more additional parts of the command, which will be
+            space-separated.
+    """
+    md_text = f"""
+## {title}
+### Copy-Paste Command
+```bash
+{command} {" ".join(args)}
+```
+"""
+    display(Markdown(md_text))
 
 
 if __name__ == "__main__":
