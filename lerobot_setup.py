@@ -3,7 +3,12 @@
 import importlib.util
 import os
 import re
+import sys
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv(override=True)
 
 
 def detect_env():
@@ -131,14 +136,64 @@ def install_lerobot():
         return
 
 
+def get_secret(key_name):
+    # 1. Try Google Colab userdata (Secret Manager)
+    if "google.colab" in sys.modules:
+        try:
+            from google.colab import userdata
+
+            return userdata.get(key_name)
+        except Exception:
+            pass  # Fallback if secret not found in Colab
+
+    # 2. Try Local/WSL .env file
+    load_dotenv(override=True)
+
+    # 3. Fallback to standard environment variable (os.environ)
+    return os.getenv(key_name)
+
+
+def setup_huggingface():
+    """Sets up Hugging Face environment."""
+    HF_TOKEN = get_secret("HF_TOKEN")
+    # Apply to environment so libraries find them automatically
+    if HF_TOKEN:
+        # HUGGINGFACE env
+        os.environ["HF_TOKEN"] = HF_TOKEN
+        from huggingface_hub import login
+
+        login(token=HF_TOKEN)
+        print("login to hf")
+    else:
+        print("login to hf failed")
+
+
+def setup_wandb():
+    WANDB_API_KEY = get_secret("WANDB_API_KEY")
+
+    if WANDB_API_KEY:
+        os.environ["WANDB_API_KEY"] = WANDB_API_KEY
+        os.environ["WANDB_NOTEBOOK_NAME"] = "train_so101_model.ipynb"
+        # WANDB env
+        import wandb
+
+        wandb.login()
+        print("login to wandb")
+    else:
+        print("login to wandb failed")
+
+
 def cd_lerobot():
     root_dir = Path(os.environ.get("ROOT_DIR"))
-    os.chdir(root_dir / "lerobot")
+    return os.chdir(root_dir / "lerobot")
 
 
 def setup_lerobot_env():
     detect_env()
     install_lerobot()
+    setup_huggingface()
+    setup_wandb()
+    cd_lerobot()
 
 
 if __name__ == "__main__":
