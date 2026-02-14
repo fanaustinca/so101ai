@@ -128,7 +128,10 @@ def install_lerobot():
         subprocess.run(["pip", "install", "-e", "."], check=True)
         print("Successfully installed lerobot dependencies.")
 
-        subprocess.run(["pip", "install", "wandb", "python-dotenv"], check=True)
+        subprocess.run(
+            ["pip", "install", "wandb", "python-dotenv", "feetech-servo-sdk"],
+            check=True,
+        )
         print("Successfully installed wandb and python-dotenv.")
     except subprocess.CalledProcessError as e:
         print(f"Error installing lerobot dependencies: {e}")
