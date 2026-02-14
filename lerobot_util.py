@@ -3,6 +3,7 @@
 import importlib.util
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -218,6 +219,45 @@ def print_shell_md(title: str, command: str, *args: str):
 ```
 """
     display(Markdown(md_text))
+
+
+def get_camera_mapping():
+    print("Scanning hardware indices...")
+    mapping = {}
+    try:
+        # Using the standard subprocess module
+        output = subprocess.run(
+            ["v4l2-ctl", "--list-devices"], capture_output=True, text=True
+        ).stdout
+        print("Raw v4l2-ctl output:")
+        print(output)
+        parts = output.split("\n\n")
+        for part in parts:
+            lines = part.strip().split("\n")
+            if lines:
+                name = lines[0].strip()
+                indices = re.findall(r"/dev/video(\d+)", part)
+                if indices:
+                    # Pick the first (lowest/even) index
+                    mapping[name] = int(indices[0])
+    except FileNotFoundError:
+        print("Error: v4l2-ctl not found. Run 'sudo apt install v4l-utils' first.")
+    return mapping
+
+
+def get_lerobot_camera_index():
+    top_cam_keyword = "Logitech Webcam"
+    wrist_cam_keyword = "USB2.0_CAM1"
+
+    mapping = get_camera_mapping()
+    print("Camera Mapping:", mapping)
+    for name, index in mapping.items():
+        if top_cam_keyword in name:
+            top_cam_index = index
+        elif wrist_cam_keyword in name:
+            wrist_cam_index = index
+
+    return top_cam_index, wrist_cam_index
 
 
 if __name__ == "__main__":
