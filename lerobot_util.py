@@ -21,10 +21,10 @@ def detect_env():
     # Check for Google Colab
     if importlib.util.find_spec("google") and importlib.util.find_spec("google.colab"):
         env = "COLAB"
-        ROOT_DIR = "/content/"
+        ROOT_DIR = "/content/so101ai"
     elif "VAST_CONTAINERLABEL" in os.environ or "VAST_API_KEY" in os.environ:
         env = "VAST"
-        ROOT_DIR = "/workspace/"
+        ROOT_DIR = "/workspace/so101ai"
     else:
         env = "LOCAL"
         # Set ROOT_DIR to the parent directory of this file
@@ -130,10 +130,10 @@ def install_lerobot():
         print("Successfully installed lerobot dependencies.")
 
         subprocess.run(
-            ["pip", "install", "wandb", "python-dotenv", "feetech-servo-sdk"],
+            ["pip", "install", "feetech-servo-sdk"],
             check=True,
         )
-        print("Successfully installed wandb and python-dotenv.")
+        print("Successfully installed feetech-servo-sdk.")
     except subprocess.CalledProcessError as e:
         print(f"Error installing lerobot dependencies: {e}")
         return
