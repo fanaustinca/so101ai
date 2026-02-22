@@ -143,7 +143,7 @@ def get_secret(key_name):
     # 1. Try Google Colab userdata (Secret Manager)
     if "google.colab" in sys.modules:
         try:
-            from google.colab import userdata
+            from google.colab import userdata  # type: ignore
 
             return userdata.get(key_name)
         except Exception:
