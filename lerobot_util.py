@@ -260,5 +260,40 @@ def get_lerobot_camera_index():
     return top_cam_index, wrist_cam_index
 
 
+def get_arm_ports() -> tuple[str, str]:
+    """
+    Returns (leader_port, follower_port) by matching USB serial numbers.
+    e.g. ('/dev/ttyACM0', '/dev/ttyACM1')
+    """
+    LEADER_SERIAL = "5AE6084010"
+    FOLLOWER_SERIAL = "5AE6083982"
+
+    def find_port_by_serial(serial: str) -> str:
+        # List all ttyACM devices
+        subprocess.run(
+            ["ls", "/dev/ttyACM*"], shell=False, capture_output=True, text=True
+        )
+        # Use glob instead
+        import glob
+
+        ports = glob.glob("/dev/ttyACM*")
+
+        for port in ports:
+            # Look up its serial via udevadm
+            info = subprocess.run(
+                ["udevadm", "info", "-n", port, "--query=all"],
+                capture_output=True,
+                text=True,
+            )
+            if serial in info.stdout:
+                return port
+
+        raise RuntimeError(f"No port found with serial: {serial}")
+
+    leader_port = find_port_by_serial(LEADER_SERIAL)
+    follower_port = find_port_by_serial(FOLLOWER_SERIAL)
+    return leader_port, follower_port
+
+
 if __name__ == "__main__":
     setup_lerobot_env()
