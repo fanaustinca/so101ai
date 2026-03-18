@@ -16,7 +16,22 @@ from lerobot_util import (
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Record training data with lerobot")
+    parser = argparse.ArgumentParser(
+        description="Record training data using lerobot-record with SO101 robot arms.",
+        epilog="""\
+This script auto-detects SO101 leader/follower arm USB ports and camera
+indices (Logitech top cam + USB wrist cam), logs into Hugging Face and
+Weights & Biases, then launches lerobot-record.
+
+The dataset repo ID is built as: {hf_namespace}/{repo_name}_{YYMMDD}
+
+Examples:
+  %(prog)s --repo_name fll_training_lightbox
+  %(prog)s --repo_name my_task --hf_namespace myuser --num_episodes 100
+  %(prog)s --repo_name my_task --single_task pick_and_place --private
+""",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument("--repo_name", required=True, help="Dataset repository name")
     parser.add_argument(
         "--hf_namespace",
