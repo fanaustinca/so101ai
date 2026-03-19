@@ -1,4 +1,4 @@
-#!/usr/bin/env -S conda run -n lerobot python
+#!/usr/bin/env python
 """Run lerobot-teleoperate with auto-detected arm ports and cameras."""
 
 import json
@@ -36,6 +36,7 @@ cmd = [
     "--teleop.type=so101_leader",
     f"--teleop.port={leader_port}",
     f"--robot.cameras={camera_config_str}",
+    "--display_data=true",
 ]
 
 print("Running:", " ".join(cmd))

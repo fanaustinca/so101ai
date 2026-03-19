@@ -1,4 +1,4 @@
-#!/usr/bin/env -S conda run -n lerobot python
+#!/usr/bin/env python
 """Run lerobot-record with auto-detected hardware and HF/W&B login."""
 
 import argparse
@@ -86,7 +86,7 @@ Examples:
         "lerobot-record",
         "--robot.type=so101_follower",
         f"--robot.port={follower_port}",
-        f"--robot.cameras='{camera_config_str}'",
+        f"--robot.cameras={camera_config_str}",
         "--teleop.type=so101_leader",
         f"--teleop.port={leader_port}",
         f"--dataset.repo_id={data_repo}",
