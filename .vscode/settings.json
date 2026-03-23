@@ -12,5 +12,4 @@
   ],
   "python.terminal.activateEnvironment": true,
   "terminal.integrated.defaultProfile.linux": "bash",
-  "python.defaultInterpreterPath": "~/miniconda3/envs/lerobot/bin/python"
 }
