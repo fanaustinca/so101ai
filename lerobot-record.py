@@ -71,6 +71,7 @@ Examples:
             "width": 640,
             "height": 480,
             "fps": 30,
+            "fourcc": "MJPG",
         },
         "top": {
             "type": "opencv",
@@ -78,6 +79,7 @@ Examples:
             "width": 640,
             "height": 480,
             "fps": 30,
+            "fourcc": "MJPG",
         },
     }
     camera_config_str = json.dumps(camera_config, separators=(",", ":"))
